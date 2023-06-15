@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: azurefile
+  namespace: dev02
+spec:
+  capacity:
+    storage: 1024Gi
+  accessModes:
+  - ReadWriteMany
+  azureFile:
+    secretName: azure-secret
+    shareName: az-dev-sa-ecomm-02
+    readOnly: false
+  mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1000
+  - gid=1000
+  - mfsymlinks
+  - nobrl
