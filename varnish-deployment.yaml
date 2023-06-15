@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish-deployment
+  namespace: namespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      containers:
+      - name: varnish
+        image: varnish:6.4
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: varnish-config
+          mountPath: /etc/varnish/
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: varnish-config
+        configMap:
+          name: varnish-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: varnish-service
+  namespace: namespace
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  selector:
+    app: varnish
+  ports:
+  - name: https
+    port: 443
+    targetPort: 443
+  type: LoadBalancer
