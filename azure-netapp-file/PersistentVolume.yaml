@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+  - ReadWriteMany
+  mountOptions:
+  - vers=3
+  nfs:
+    server: 10.10.10.10
+    path: /az-dev-netapp-name
