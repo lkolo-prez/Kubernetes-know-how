@@ -1,0 +1,46 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: application
+  namespace: namespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: spc-dev-kv-application-namespace
+      - name: volume
+        persistentVolumeClaim:
+          claimName: pvc-nfs
+      containers:
+      - name: application
+        image: lxecommercecontainerregistry.azurecr.io/test-image
+        resources:
+          requests:
+            cpu: 400m
+            memory: 2Gi
+          limits:
+            cpu: 2000m
+            memory: 8Gi
+        env:
+        - name: TEST
+          valueFrom:
+            secretKeyRef:
+              name: test
+              key: key
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: /mnt/secrets-store
+        - name: volume
+          mountPath: /mnt/data
