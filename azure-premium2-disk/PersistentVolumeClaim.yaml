@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: premium2-disk
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: premium2-disk-sc
+  resources:
+    requests:
+      storage: 1000Gi
