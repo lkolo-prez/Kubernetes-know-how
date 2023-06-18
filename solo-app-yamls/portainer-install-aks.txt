@@ -1,0 +1,14 @@
+az aks get-credentials --resource-group portainer-aks-demo --name portainerAKSDemo 
+
+helm repo add portainer https://portainer.github.io/k8s/ 
+helm repo update 
+
+kubectl create namespace portainer 
+helm install -n portainer portainer portainer/portainer --set service.type=LoadBalancer
+
+kubectl create namespace portainer2 
+helm install -n portainer2 portainer2 portainer/portainer --set service.type=LoadBalancer
+
+metadata:
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"

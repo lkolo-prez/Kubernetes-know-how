@@ -1,0 +1,34 @@
+Usługi
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw allow 50022/tcp
+sudo ufw allow 6433/tcp
+sudo ufw allow 6433/udp
+sudo ufw allow 2379/tcp
+sudo ufw allow 2380/tcp
+sudo ufw allow 10251/tcp
+sudo ufw allow 10252/tcp
+sudo ufw allow 10250/tcp
+sudo ufw allow 30000:32767/tcp
+
+
+
+
+
+Struktura poleceń
+Zacznę od zaprezentowania podstawowych poleceń, i 
+będą to chyba najczęściej używane/najpopularniejsze, choć nie obiecuje, że wszystkie:
+
+sudo ufw allow [nazwa_usługi]
+sudo ufw allow [port]
+sudo ufw allow [port_od]:[port_do]
+sudo ufw allow [port]/[typ_połączenia]
+sudo ufw allow [port_od]:[port_do]/[typ_połączenia]
+sudo ufw allow from [adres_IP]
+sudo ufw allow from [adres_IP] to any port [port]
+sudo ufw allow from [adres_IP]/[maska_sieciowa] to any port [port]
+sudo ufw allow from [adres_IP]/[maska_sieciowa] to any port [port] proto [typ_połączenia]
+sudo ufw allow in on [interfejs_sieciowy] to any port [port]
+sudo ufw insert [numer_reguły] deny [port]
+sudo ufw insert [numer_reguły] deny from [adres_IP]

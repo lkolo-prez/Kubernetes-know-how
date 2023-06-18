@@ -1,0 +1,14 @@
+
+Master node open ports in local network
+-------------
+sudo firewall-cmd --add-port=6433/tcp --permanent
+sudo firewall-cmd --add-port=2379/tcp --permanent
+sudo firewall-cmd --add-port=2380/tcp --permanent
+sudo firewall-cmd --add-port=10250/tcp --permanent
+sudo firewall-cmd --add-port=10251/tcp --permanent
+sudo firewall-cmd --add-port=10252/tcp --permanent
+
+worker node open ports in local network
+----------
+sudo firewall-cmd --add-port=10250/tcp --permanent
+sudo firewall-cmd --add-port=30000-32767/tcp --permanent

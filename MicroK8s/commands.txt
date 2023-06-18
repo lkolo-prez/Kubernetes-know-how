@@ -1,0 +1,171 @@
+passwd
+
+echo "Port 2222" >> /etc/ssh/sshd_config
+cat /etc/ssh/sshd_config
+systemctl restart sshd
+systemctl status sshd
+cd /etc/ssh
+mc
+apt install mc
+apt install mc -y
+mc
+systemctl status sshd
+echo "PermitRootLogin Yes" >> /etc/ssh/sshd_config
+systemctl restart sshd
+systemctl status sshd
+sudo apt update
+sudo apt -y upgrade && sudo systemctl reboot
+containerd config default  /etc/containerd/config.toml
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+mcedit
+mcedit /etc/containerd/config.toml
+lsmod | grep br_netfilter
+sudo systemctl enable kubelet
+sudo kubeadm config images pull
+sudo mcedit /etc/hosts
+sudo kubeadm init   --pod-network-cidr=192.168.0.0/16   --control-plane-endpoint=k8s-cluster.computingforgeeks.com
+systemctl status kubelet
+/etc/hostname
+mcedit /etc/hostname
+systemctl start docker.service
+nano /etc/sysconfig/kubelet
+systemctl enable docker kubel
+cat /etc/crio/crio.conf | grep cgroup
+docker ps -a | grep kube
+kubectl get nodes
+docker images
+systemctl status kubelet
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
+apt-get install CRI-O
+apt-get install cri-o
+CRIO_VERSION=1.17
+. /etc/os-release
+sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${NAME}_${VERSION_ID}/ /' >/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/x${NAME}_${VERSION_ID}/Release.key -O- | sudo apt-key add -
+sudo apt update
+sudo apt install cri-o-${CRIO_VERSION}
+grep br_netfilter
+sudo systemctl enable kubelet
+sudo systemctl status kubelet
+sudo kubeadm init   --pod-network-cidr=192.168.0.0/16
+kubeadm reset
+sudo kubeadm init   --pod-network-cidr=192.168.0.0/16
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+kubectl cluster-info
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+watch kubectl get pods --all-namespaces
+kubectl get nodes -o wide
+kubeadm join 10.90.93.17:6443 --token zpxqsn.yam13ou9lch0gpi0         --discovery-token-ca-cert-hash sha256:c65c1077672c243347defa764f1d45c6572532b4319f711637506de46cca13ab
+sudo cat /etc/hosts
+kubectl cluster-info
+kubectl cluster-info dump
+clear
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+configmap/calico-config created
+calico-config created
+kubectl get nodes -o wide
+kubectl get nodes
+root@airlukubdev03:~#
+$ kubectl get pods
+kubectl get pods
+kubectl apply -f https://k8s.io/examples/pods/commands.yaml
+kubectl get pods
+kubectl get nodes
+kubectl get nodes -o wide
+sudo kubectl get pods --all-namespaces
+kubectl cluster-info
+kubectl label node airlukubdev03  node-role.kubernetes.io/worker=worker --overwrite
+kubectl get nodes -o wide
+kubectl label node airlukubdev04  node-role.kubernetes.io/worker=worker --overwrite
+kubectl label node airlukubdev05  node-role.kubernetes.io/worker=worker --overwrite
+kubectl get nodes -o wide
+kubectl cluster-info
+exit
+sudo apt update
+sudo apt -y install curl apt-transport-httpscurl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt update
+sudo apt -y install vim git curl wget kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+kubectl version --client && kubeadm version
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo swapoff -a
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sudo sysctl --system
+sudo apt update
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt install -y containerd.io docker-ce docker-ce-cli
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo tee /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo systemctl enable docker
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sudo sysctl --system
+. /etc/os-release
+sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${NAME}_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/x${NAME}_${VERSION_ID}/Release.key -O- | sudo apt-key add -
+sudo apt update
+apt-get upgrade -y
+sudo apt install cri-o-1.17
+sudo apt install cri
+sudo apt install cri-o
+sudo apt install cri-o*
+sudo systemctl daemon-reload
+sudo systemctl start crio
+sudo systemctl enable crio
+sudo systemctl start crio
+sudo apt install crio
+sudo apt install crio*
+sudo apt install cri-o*
+sudo tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install -y containerd.io
+sudo mkdir -p /etc/containerd
+sudo su -
+exit
