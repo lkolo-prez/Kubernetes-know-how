@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish-deployment
+  labels:
+    app: varnish
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      containers:
+      - name: varnish
+        image: varnish:6.6.0
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "400Mi"
+        env:
+        - name: CACHE_SIZE
+          value: 128m
+        - name: VCL_CONFIG
+          value: /etc/varnish/configmap/default.vcl
+        volumeMounts:
+        - name: varnish-config
+          mountPath: /etc/varnish/configmap
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: varnish-config
+        configMap:
+          name: varnish-configmap
+

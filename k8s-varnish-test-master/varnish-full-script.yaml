@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+namesapce: dev
+metadata:
+  name: varnish-configmap-dev
+  labels:
+    app: varnish-dev
+data:
+  default.vcl: |
+    vcl 4.0;
+    backend default {
+        .host = "nginx-service";
+        .port = "8080";
+    }
+    sub vcl_recv {
+        set req.backend_hint = default;
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+namesapce: dev
+metadata:
+  name: varnish-deployment-dev
+  labels:
+    app: varnish
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: varnish-dev
+  template:
+    metadata:
+      labels:
+        app: varnish-dev
+    spec:
+      containers:
+      - name: varnish-dev
+        image: varnish:6.6.0
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "400Mi"
+        env:
+        - name: CACHE_SIZE
+          value: 128m
+        - name: VCL_CONFIG
+          value: /etc/varnish/configmap/default.vcl
+        volumeMounts:
+        - name: varnish-config-dev
+          mountPath: /etc/varnish/configmap
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: varnish-config-dev
+        configMap:
+          name: varnish-configmap-dev
+
+---
+apiVersion: v1
+kind: Service
+namesapce: dev
+metadata:
+  name: varnish-service-dev
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30081
