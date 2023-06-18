@@ -1,41 +1,241 @@
-# MicroK8s Knowledge Base Repository
 
-This repository serves as my knowledge base for MicroK8s technology. It contains various configurations, examples, and resources based on my experiences with MicroK8s, a lightweight Kubernetes distribution. Here, you will find helpful information and instructions to aid in understanding and working with MicroK8s.
+# MicroK8s - Podstawowe Instrukcje
 
-## What is MicroK8s?
+## Instalacja MicroK8s
 
-MicroK8s is a lightweight, single-node Kubernetes distribution designed for local development and testing purposes. It provides a simplified installation and management process while offering the core functionalities of a full Kubernetes deployment. MicroK8s is an excellent choice for developers and enthusiasts who want to quickly set up a Kubernetes environment on their local machines.
-
-With MicroK8s, you can run and manage containerized applications, utilize Kubernetes features like service discovery and load balancing, and experiment with different Kubernetes configurations and add-ons. It offers a convenient way to learn, develop, and test your applications locally before deploying them to production environments.
-
-## Examples
-
-Here are a few examples showcasing the usage and configuration of MicroK8s:
-
-1. **Install MicroK8s** (Command):
+### Ubuntu
 
 ```bash
 sudo snap install microk8s --classic
 ```
 
-2. **Enable Core Add-ons** (Command):
+### Windows
+
+1. Zainstaluj [Multipass](https://multipass.run/)
+2. Uruchom Multipass i stwórz nową instancję Ubuntu:
 
 ```bash
-microk8s enable dns storage dashboard
+multipass launch --name ubuntu-lts
 ```
 
-3. **Deploy Application** (Command):
+3. Zainstaluj MicroK8s na instancji Ubuntu:
 
 ```bash
-microk8s kubectl create deployment nginx --image=nginx
+multipass exec ubuntu-lts -- sudo snap install microk8s --classic
 ```
 
-Feel free to explore more examples and configurations within this repository to learn and experiment with MicroK8s functionalities.
+### MacOS
 
-## Contributing
+1. Zainstaluj [Multipass](https://multipass.run/)
+2. Uruchom Multipass i stwórz nową instancję Ubuntu:
 
-If you have any suggestions, improvements, or additional examples that you would like to contribute to this knowledge base, please feel free to submit a pull request. Your contributions are greatly appreciated!
+```bash
+multipass launch --name ubuntu-lts
+```
 
-## License
+3. Zainstaluj MicroK8s na instancji Ubuntu:
 
-This repository is licensed under the [MIT License](LICENSE).
+```bash
+multipass exec ubuntu-lts -- sudo snap install microk8s --classic
+```
+
+## Podstawy MicroK8s
+
+Uruchomienie klastra:
+
+```bash
+microk8s start
+```
+
+Zatrzymanie klastra:
+
+```bash
+microk8s stop
+```
+
+Sprawdzenie statusu klastra:
+
+```bash
+microk8s status
+```
+
+## Wdrażanie aplikacji na MicroK8s
+
+Stwórz plik `nginx-deployment.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+
+Wdrożenie aplikacji:
+
+```bash
+microk8s kubectl apply -f nginx-deployment.yaml
+```
+
+Sprawdzenie statusu wdrożenia:
+
+```bash
+microk8s kubectl get deployments
+```
+
+## Konfiguracja sieci w MicroK8s
+
+Stwórz plik `nginx-service.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+Utworzenie usługi:
+
+```bash
+microk8s kubectl apply -f nginx-service.yaml
+```
+
+Sprawdzenie statusu usługi:
+
+```bash
+microk8s kubectl get services
+```
+
+## Praca z woluminami danych w MicroK8s
+
+Stwórz plik `nginx-pv-pvc.yaml`:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName:
+
+Przykro mi, ale moja odpowiedź przekroczyła limit znaków. Kontynuuję poniżej:
+
+```yaml
+  local-storage
+  hostPath:
+    path: "/mnt/data"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pvc
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+```
+
+Utworzenie woluminu trwałego i żądania woluminu trwałego:
+
+```bash
+microk8s kubectl apply -f nginx-pv-pvc.yaml
+```
+
+Sprawdzenie statusu PV i PVC:
+
+```bash
+microk8s kubectl get pv
+microk8s kubectl get pvc
+```
+
+## Zabezpieczanie klastra MicroK8s
+
+Utwórz plik `rbac.yaml`:
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: user
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: user-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: user-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: user-role
+subjects:
+- kind: ServiceAccount
+  name: user
+```
+
+Zastosuj RBAC:
+
+```bash
+microk8s kubectl apply -f rbac.yaml
+```
+
+## Używanie dodatków MicroK8s
+
+Włącz dodatek Istio:
+
+```bash
+microk8s enable istio
+```
+
+Sprawdź status dodatku Istio:
+
+```bash
+microk8s istioctl version
+```
+
+## Najlepsze praktyki i porady dotyczące MicroK8s
+
+1. Regularnie aktualizuj MicroK8s do najnowszej wersji.
+2. Regularnie sprawdzaj status klastra i monitoruj zużycie zasobów.
+3. Regularnie twórz kopie zapasowe swoich danych.
+4. Używaj narzędzi do zarządzania konfiguracją, takich jak Helm, do zarządzania złożonymi wdrożeniami.
+5. Używaj dodatków MicroK8s do łatwego włączania zaawansowanych funkcji Kubernetes.
