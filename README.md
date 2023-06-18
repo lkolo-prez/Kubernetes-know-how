@@ -32,6 +32,13 @@ spec:
       containers:
         - name: my-app-container
           image: my-app-image:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "500m"
+              memory: "400Mi"
           ports:
             - containerPort: 8080
 ```
