@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-deployment
+  namespace: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+      - name: ubuntu
+        image: ubuntu:latest
+        resources:
+          requests:
+            cpu: 10m
+            memory: 200Mi
+          limits:
+            cpu: 300m
+            memory: 1Gi
+        command:
+        - "/bin/bash"
+        - "-c"
+        - "while true; do echo hello world; sleep 10;done"
