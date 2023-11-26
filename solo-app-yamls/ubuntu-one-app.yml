@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ubuntu
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-deployment
+  namespace: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+      - name: ubuntu
+        image: ubuntu:latest
+        resources:
+          requests:
+            cpu: 10m
+            memory: 200Mi
+          limits:
+            cpu: 300m
+            memory: 1Gi
+        command:
+        - "/bin/bash"
+        - "-c"
+        - "while true; do echo hello world; sleep 10;done"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ubuntu-service
+spec:
+  selector:
+    app: ubuntu
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 8080
