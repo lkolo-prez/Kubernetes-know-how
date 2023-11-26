@@ -39,6 +39,12 @@ spec:
         - "/bin/bash"
         - "-c"
         - "while true; do echo hello world; sleep 10;done"
+        - "apt update"
+        - "apt upgrade"
+        - "sudo apt install -y vim nano wget curl mc"
+        - "sudo apt install -y net-tools aptitude iputils-ping dnsutils traceroute"
+        - "sudo apt install -ynetcat nmap tcpdump iperf"
+
 ---
 apiVersion: v1
 kind: Service
