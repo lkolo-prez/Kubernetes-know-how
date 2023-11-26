@@ -43,7 +43,7 @@ spec:
         - "apt upgrade"
         - "apt install -y vim nano wget curl mc sudo"
         - "apt install -y net-tools aptitude iputils-ping dnsutils traceroute"
-        - "apt install -ynetcat nmap tcpdump iperf"
+        - "apt install -y netcat nmap tcpdump iperf"
 
 ---
 apiVersion: v1
